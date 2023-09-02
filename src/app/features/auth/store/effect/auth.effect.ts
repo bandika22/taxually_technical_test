@@ -28,4 +28,27 @@ export class RegistrationEffects {
       })
     )
   );
+
+  getUsers$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(AuthActionTypes.loadUsers),
+      switchMap((action, state) => {
+        const users = this.authService.getUsersFromLS();
+        return of(AuthActionTypes.loadUsersSuccess({users}));
+      })
+    )
+  );
+
+  login$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AuthActionTypes.login),
+    switchMap((action) => {
+      return this.authService.loginUser(action.email, action.password)
+        .pipe(
+          map(() => AuthActionTypes.signupSuccess()),
+          catchError((error) => of(AuthActionTypes.signupError({ error: 'Loggin failed' })))
+        );
+    })
+  )
+);
 }

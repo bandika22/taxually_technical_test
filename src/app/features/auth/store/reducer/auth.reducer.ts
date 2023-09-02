@@ -14,7 +14,7 @@ export const initialState: AuthState = {
   error: null,
 };
 
-export const signupReducer = createReducer(
+export const authReducer = createReducer(
   initialState,
   on(AuthActionTypes.signupSuccess, (state, action) => ({
     ...state,
@@ -23,5 +23,9 @@ export const signupReducer = createReducer(
   on(AuthActionTypes.signupError, (state, action) => ({
     ...state,
     error: action.error,
-  }))
+  })),
+  on(AuthActionTypes.loadUsersSuccess, (state, action) => ({
+    ...state,
+    users: action.users
+  })),
 );

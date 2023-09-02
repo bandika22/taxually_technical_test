@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
-import { signupReducer } from './features/auth/store/reducer/auth.reducer';
+import { authReducer } from './features/auth/store/reducer/auth.reducer';
 import { RegistrationEffects } from './features/auth/store/effect/auth.effect'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -19,7 +19,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    StoreModule.forRoot({ signup: signupReducer }),
+    StoreModule.forRoot({ auth: authReducer }),
     EffectsModule.forRoot([RegistrationEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,

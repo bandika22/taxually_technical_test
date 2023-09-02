@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../models/user';
 
-export interface UserForm {
+export interface SignUpForm {
   firtName: FormControl<string>;
   lastName: FormControl<string>;
   email: FormControl<string>;
@@ -16,17 +16,17 @@ export interface UserForm {
 })
 export class SignupComponent {
 
-  firstName = new FormControl<string>('');
-  lastName = new FormControl<string>('');
-  email = new FormControl<string>('');
-  password = new FormControl<string>('');
+  firstName = new FormControl<string>('', {nonNullable: true});
+  lastName = new FormControl<string>('', {nonNullable: true});
+  email = new FormControl<string>('', {nonNullable: true});
+  password = new FormControl<string>('', {nonNullable: true});
 
-  signUpForm: FormGroup<UserForm> = new FormGroup<UserForm>({
+  signUpForm: FormGroup<SignUpForm> = new FormGroup<SignUpForm>({
     firtName: this.firstName as FormControl<string>,
     lastName: this.lastName as FormControl<string>,
     email: this.email as FormControl<string>,
     password: this.password as FormControl<string>
-  });
+  }, Validators.required);
 
 
 
@@ -34,8 +34,10 @@ export class SignupComponent {
     private authService: AuthService
   ){}
 
-  signUp(signUpForm: FormGroup<UserForm>){
-    this.authService.signUp(signUpForm.value as User);
+  signUp(signUpForm: FormGroup<SignUpForm>){
+    if(this.signUpForm.valid){
+      this.authService.signUp(signUpForm);
+    }
   }
 
 }
