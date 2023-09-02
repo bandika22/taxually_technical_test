@@ -4,6 +4,13 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthComponent } from './auth.component';
 import { AuthRoutingModule } from './auth-routing.module'
 import { SignupComponent } from './pages/signup/signup.component';
+
+import { RegistrationEffects } from './store/effect/auth.effect';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { signupReducer } from './store/reducer/auth.reducer';
+import { AuthService } from './services/auth.service';
+
 @NgModule({
   declarations: [
     LoginComponent,
@@ -12,7 +19,10 @@ import { SignupComponent } from './pages/signup/signup.component';
   ],
   imports: [
     SharedDataModule,
-    AuthRoutingModule
+    AuthRoutingModule,
+  ],
+  providers: [
+    AuthService
   ]
 })
 export class AuthModule { }
