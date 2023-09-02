@@ -38,6 +38,10 @@ export class AuthService implements OnDestroy{
 
     if (JSON.parse(localStorage.getItem('users') as string)) {
       users = JSON.parse(localStorage.getItem('users') as string);
+      if(users.find(u => u.email === user.email)){
+        console.log('ezzel az email-lel már regisztráltak!');
+        return from([user]);
+      }
       const lastUserIndex: number | undefined = users[users.length - 1].id;
       user = { ...user, id: lastUserIndex !== undefined && lastUserIndex >= 0 ? lastUserIndex + 1 : 0 };
     } else {
@@ -63,14 +67,16 @@ export class AuthService implements OnDestroy{
   }
 
   getUsers() {
-    return from(this.store.select(selectAuthState.users));
+    let users: User[] = [];
+    this.allUserSubscription = this.store.select(selectAuthState.users).subscribe(
+      u => users = u
+    );
+
+    return users;
   }
 
   loginUser(email: string, password: string) {
-    let users: User[] = [];
-    this.allUserSubscription =  this.getUsers().subscribe(
-      u => users = u
-    );
+    const users: User[] = this.getUsers();
   
     if (users.find(user => user.email === email && user.password === password)) {
       this.router.navigate(['home']);
@@ -79,6 +85,8 @@ export class AuthService implements OnDestroy{
       return from([null])
     }
   }
+
+
 
   ngOnDestroy(): void {
     if(this.allUserSubscription){

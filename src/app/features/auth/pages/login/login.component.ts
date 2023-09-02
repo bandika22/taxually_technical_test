@@ -15,11 +15,6 @@ export interface LoginForm {
 })
 export class LoginComponent {
 
-  users$ = this.authService.getUsers().pipe(
-    map(users => {
-    })
-  );
-
   email = new FormControl<string>('', Validators.required);
   password = new FormControl<string>('', Validators.required);
 
