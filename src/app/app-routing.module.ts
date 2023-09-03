@@ -5,7 +5,7 @@ import { AuthGuard } from './core/guards/auth.gurd';
 
 const routes: Routes = [
   { path: '', component: FileManagerComponent, canActivate: [AuthGuard]},
-  { path: 'home', component: FileManagerComponent, canActivate: [AuthGuard]},
+  { path: 'home', component: FileManagerComponent,  loadChildren: () => import('./features/home/home.module').then(m => m.HomeModule),  canActivate: [AuthGuard]},
   { path: 'auth', loadChildren: () => import('./features/auth/auth.module').then(m => m.AuthModule) },
 ];
 
