@@ -37,7 +37,7 @@ export const login = createAction(
 );
 
 export const loginSuccess = createAction(
-    AuthActionTypes.LOGIN_SUCCESS
+    AuthActionTypes.LOGIN_SUCCESS, props<{ loggedInUser: User }>()
 );
 
 export const loginError= createAction(

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, from } from "rxjs";
+import { Observable, from, of } from "rxjs";
 import { User } from "src/app/features/auth/models/user";
 
 @Injectable({
@@ -33,14 +33,15 @@ export class ApiService {
         return myObservable;
     }
 
-    loginUser(email: string, password: string) {
+    loginUser(email: string, password: string): User | null {
         const users: User[] = this.getUsers();
+        const user: User | undefined  = users.find(user => user.email === email && user.password === password);
+        let myObservable: Observable<User>;;
 
-        if (users.find(user => user.email === email && user.password === password)) {
-            //this.router.navigate(['home']);
-            return from([null])
+        if (user) {
+            return user;
         } else {
-            return from([null])
+            return null;
         }
     }
 

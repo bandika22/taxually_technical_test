@@ -43,12 +43,13 @@ export class RegistrationEffects {
   login$ = createEffect(() =>
   this.actions$.pipe(
     ofType(AuthActionTypes.login),
-    switchMap((action) => {
-      return this.apiSeervice.loginUser(action.email, action.password)
-        .pipe(
-          map(() => AuthActionTypes.signupSuccess()),
-          catchError((error) => of(AuthActionTypes.signupError({ error: 'Loggin failed' })))
-        );
+    switchMap((action, state) => {
+      const user = this.apiSeervice.loginUser(action.email, action.password);
+      if(user){
+        this.router.navigate(['home'])
+        return of(AuthActionTypes.loginSuccess({loggedInUser: user}));
+      }
+      return of(AuthActionTypes.loginError({error: 'Wrong email or password!'}));
     })
   )
 );

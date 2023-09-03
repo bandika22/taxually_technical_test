@@ -6,12 +6,16 @@ export interface AuthState {
   user: User,
   users: User[],
   error: string | null;
+  loggedInUser: User;
+  loggedIn: boolean;
 }
 
 export const initialState: AuthState = {
   user: {} as User,
   users: [],
   error: null,
+  loggedInUser: {} as User,
+  loggedIn: false,
 };
 
 export const authReducer = createReducer(
@@ -27,5 +31,14 @@ export const authReducer = createReducer(
   on(AuthActionTypes.loadUsersSuccess, (state, action) => ({
     ...state,
     users: action.users
+  })),
+  on(AuthActionTypes.loginSuccess, (state, action) => ({
+    ...state,
+    loggedInUser: action.loggedInUser,
+    loggedIn: true,
+  })),
+  on(AuthActionTypes.loginError, (state, action) => ({
+    ...state,
+    loggedIn: false,
   })),
 );

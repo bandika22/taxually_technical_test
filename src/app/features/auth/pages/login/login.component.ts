@@ -30,7 +30,7 @@ export class LoginComponent {
   }
 
   login(loginForm: FormGroup<LoginForm>){
-    if(loginForm.valid){
+    if(loginForm.valid){      
       this.authService.login(loginForm.controls.email.value, loginForm.controls.password.value);
     }
   }
