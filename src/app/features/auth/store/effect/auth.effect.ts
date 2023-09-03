@@ -35,22 +35,23 @@ export class RegistrationEffects {
       ofType(AuthActionTypes.loadUsers),
       switchMap((action, state) => {
         const users = this.apiSeervice.getUsers();
-        return of(AuthActionTypes.loadUsersSuccess({users}));
+        return of(AuthActionTypes.loadUsersSuccess({ users }));
       })
     )
   );
 
   login$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(AuthActionTypes.login),
-    switchMap((action, state) => {
-      const user = this.apiSeervice.loginUser(action.email, action.password);
-      if(user){
-        this.router.navigate(['home'])
-        return of(AuthActionTypes.loginSuccess({loggedInUser: user}));
-      }
-      return of(AuthActionTypes.loginError({error: 'Wrong email or password!'}));
-    })
-  )
-);
+    this.actions$.pipe(
+      ofType(AuthActionTypes.login),
+      switchMap((action, state) => {
+        const user = this.apiSeervice.loginUser(action.email, action.password);
+        if (user) {
+          this.router.navigate(['home']);
+          localStorage.setItem('loggedInUser', JSON.stringify(user));
+          return of(AuthActionTypes.loginSuccess({ loggedInUser: user }));
+        }
+        return of(AuthActionTypes.loginError({ error: 'Wrong email or password!' }));
+      })
+    )
+  );
 }
