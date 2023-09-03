@@ -10,6 +10,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from './features/auth/store/reducer/auth.reducer';
 import { RegistrationEffects } from './features/auth/store/effect/auth.effect'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { ApiService } from './core/services/api.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
       logOnly: false
     })
   ],
-  providers: [],
+  providers: [ApiService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

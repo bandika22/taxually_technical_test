@@ -5,6 +5,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as AuthActionTypes from '../action/auth.action';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/core/services/api.service';
 
 @Injectable()
 export class RegistrationEffects {
@@ -12,14 +13,14 @@ export class RegistrationEffects {
   constructor(
     private router: Router,
     private actions$: Actions,
-    private authService: AuthService
+    private apiSeervice: ApiService
   ) { }
 
   signup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AuthActionTypes.signup),
       switchMap((action) => {
-        return this.authService.signupUser(action.user)
+        return this.apiSeervice.signupUser(action.user)
           .pipe(
             tap(() => { this.router.navigate(['auth/login']); }),
             map(() => AuthActionTypes.signupSuccess()),
@@ -33,7 +34,7 @@ export class RegistrationEffects {
     this.actions$.pipe(
       ofType(AuthActionTypes.loadUsers),
       switchMap((action, state) => {
-        const users = this.authService.getUsersFromLS();
+        const users = this.apiSeervice.getUsers();
         return of(AuthActionTypes.loadUsersSuccess({users}));
       })
     )
@@ -43,7 +44,7 @@ export class RegistrationEffects {
   this.actions$.pipe(
     ofType(AuthActionTypes.login),
     switchMap((action) => {
-      return this.authService.loginUser(action.email, action.password)
+      return this.apiSeervice.loginUser(action.email, action.password)
         .pipe(
           map(() => AuthActionTypes.signupSuccess()),
           catchError((error) => of(AuthActionTypes.signupError({ error: 'Loggin failed' })))
