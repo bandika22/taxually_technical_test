@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
 import { Files } from 'src/app/features/auth/models/files';
 import { UserFiles } from 'src/app/features/auth/models/user-files';
 import { FileManagerService } from 'src/app/features/auth/services/file-manager.service';
@@ -9,12 +9,23 @@ import { FileManagerService } from 'src/app/features/auth/services/file-manager.
   templateUrl: './file-manager.component.html',
   styleUrls: ['./file-manager.component.css']
 })
-export class FileManagerComponent {
+export class FileManagerComponent implements OnInit {
+
+  @ViewChild(MatSort) sort!: MatSort;
+
   files: any[] = [];
+  files$ = this.fileManagerService.getFiles();
+
+  displayedColumns: string[] = ['fileName', 'fileType', 'action'];
 
   constructor(
     private fileManagerService: FileManagerService
-  ) { }
+  ) { 
+    this.fileManagerService.loadFiles();
+  }
+
+  ngOnInit(): void {
+  }
 
   /**
    * on file drop handler

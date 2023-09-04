@@ -6,12 +6,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatInputModule} from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 const modules = [
   FormsModule,
   ReactiveFormsModule,
   MatInputModule,
   MatFormFieldModule,
+  MatTableModule,
+  MatSortModule,
   MatIconModule,
   CommonModule
 ];

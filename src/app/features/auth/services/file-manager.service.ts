@@ -28,15 +28,11 @@ export class FileManagerService {
     this.store.dispatch(FileManagerTypes.saveFiles({ files: userFiles }));
   }
 
-  loadUsers() {
+  loadFiles() {
     this.store.dispatch(FileManagerTypes.loadUserFiles());
   }
 
   getFiles() {
-    let files: UserFiles = {} as UserFiles;
-    this.allUserSubscription = this.store.select(selectFileManagerhState.userFiles).subscribe(
-      f => files = f
-    );
-    return files;
+    return this.store.select(selectFileManagerhState.userFiles);
   }
 }

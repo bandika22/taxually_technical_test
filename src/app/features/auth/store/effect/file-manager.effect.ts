@@ -29,7 +29,7 @@ export class FileManagerEffects {
     this.actions$.pipe(
       ofType(FileManagerTypes.loadUserFiles),
       switchMap((action, state) => {
-        const files = this.apiSeervice.getUsers();
+        const files = this.apiSeervice.getFiles();
         return of(FileManagerTypes.loadUserFilesSuccess({ files }));
       })
     )
