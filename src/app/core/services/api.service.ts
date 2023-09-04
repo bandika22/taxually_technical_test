@@ -3,7 +3,6 @@ import { Injectable } from "@angular/core";
 import { Observable, delay, dematerialize, from, materialize, of, throwError } from "rxjs";
 import { User } from "src/app/features/auth/models/user";
 import { UserFiles } from "src/app/features/auth/models/user-files";
-import { userFiles } from "src/app/features/auth/store/selector/file-manager.selector";
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +44,7 @@ export class ApiService {
 
     saveFiles(files: UserFiles) {
         let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
-        if (userFiles) {
+        if (userFiles.length) {
             let userFile: UserFiles | undefined = userFiles.find(file => file.usedId === files.usedId);
             if (userFile) {
                 userFile.files = userFile.files.concat(files.files);
