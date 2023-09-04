@@ -128,6 +128,7 @@ export class FileManagerComponent implements OnInit {
 
         if(this.files.length-1 === index){
           this.fileManagerService.saveFiles(files);
+          this.files = [];
         }
 
       };

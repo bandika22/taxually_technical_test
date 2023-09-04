@@ -42,15 +42,15 @@ export class ApiService {
         }
     }
 
-    saveFiles(userFile: UserFiles) {
+    saveFiles(files: UserFiles) {
         let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
         if(userFiles){
-            let userFile: UserFiles | undefined = userFiles.find(userFile => userFile.usedId === userFile.usedId);
+            let userFile: UserFiles | undefined = userFiles.find(file => file.usedId === files.usedId);
             if(userFile){
-                userFile.files = userFile.files.concat(userFile.files);
+                userFile.files = userFile.files.concat(files.files);
             }
         } else {
-            userFiles = [userFile];
+            userFiles = [files];
         }
         localStorage.setItem('userFile', JSON.stringify(userFiles));
     }
