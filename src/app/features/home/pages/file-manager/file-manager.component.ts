@@ -27,6 +27,7 @@ export class FileManagerComponent implements OnInit {
       if(userFiles){
         this.userFiles = userFiles;
         this.dataSource = new MatTableDataSource<Files>(userFiles.files);
+        this.dataSource.sort = this.sort;
       }
     })
   );
