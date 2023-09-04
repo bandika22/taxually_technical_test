@@ -34,12 +34,25 @@ export class FileManagerEffects {
       switchMap((action) => {
         return this.apiService.getFiles(action.userId)
           .pipe(
-
             map( response => FileManagerTypes.loadUserFilesSuccess({files: response.body})),
             catchError((error) => of(FileManagerTypes.loadUserFilesError({ error: error })))
           );
       })
     )
   );
+
+  deleteFiles$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(FileManagerTypes.deleteFile),
+    switchMap((action) => {
+      return this.apiService.deleteFiles(action.userId, action.fileName)
+      .pipe(
+        tap( () => this.fileManagerService.loadFiles()),
+        map( () => FileManagerTypes.deleteFileSuccess()),
+        catchError((error) => of(FileManagerTypes.deleteFileError({ error: error })))
+      );
+    })
+  )
+);
 
 }

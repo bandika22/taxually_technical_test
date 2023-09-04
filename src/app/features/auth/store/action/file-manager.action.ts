@@ -8,6 +8,9 @@ export enum FileManagerActionTypes {
     LOAD_USER_FILES = '[FileManager] Load User Files',
     LOAD_USER_FILES_SUCCESS = '[FileManager] Load User Files Success',
     LOAD_USER_FILES_ERROR = '[FileManager] Load User Files Success',
+    DELETE_FILE = '[FileManager] Delete File',
+    DELETE_FILE_SUCCESS = '[FileManager] Delete File Success',
+    DELETE_FILE_ERROR = '[FileManager] Delete File Error',
 }
 
 export const saveFiles = createAction(
@@ -32,4 +35,16 @@ export const loadUserFilesSuccess = createAction(
 
 export const loadUserFilesError = createAction(
     FileManagerActionTypes.LOAD_USER_FILES_SUCCESS, props<{ error: string  }>()
+);
+
+export const deleteFile = createAction(
+    FileManagerActionTypes.DELETE_FILE, props<{ fileName: string, userId: number }>()
+);
+
+export const deleteFileSuccess = createAction(
+    FileManagerActionTypes.DELETE_FILE_SUCCESS
+);
+
+export const deleteFileError= createAction(
+    FileManagerActionTypes.DELETE_FILE_ERROR, props<{ error: string }>()
 );

@@ -39,4 +39,8 @@ export class FileManagerService {
     const user: User = JSON.parse(localStorage.getItem('loggedInUser') as string);
     return user.id;
   }
+
+  deleteFile(fileName: string) {
+    this.store.dispatch(FileManagerTypes.deleteFile({userId: this.getUserId(), fileName}));
+  }
 }

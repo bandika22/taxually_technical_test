@@ -17,5 +17,9 @@ export const fileManagerReducer = createReducer(
     ...state,
     files: action.files,
     error: null
+  })),
+  on(FileManagerTypes.deleteFileSuccess, (state, action) => ({
+    ...state,
+    error: null
   }))
 );

@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable, delay, dematerialize, from, materialize, of, throwError } from "rxjs";
 import { User } from "src/app/features/auth/models/user";
 import { UserFiles } from "src/app/features/auth/models/user-files";
+import { userFiles } from "src/app/features/auth/store/selector/file-manager.selector";
 
 @Injectable({
     providedIn: 'root'
@@ -44,9 +45,9 @@ export class ApiService {
 
     saveFiles(files: UserFiles) {
         let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
-        if(userFiles){
+        if (userFiles) {
             let userFile: UserFiles | undefined = userFiles.find(file => file.usedId === files.usedId);
-            if(userFile){
+            if (userFile) {
                 userFile.files = userFile.files.concat(files.files);
             }
         } else {
@@ -56,12 +57,26 @@ export class ApiService {
     }
 
     getFiles(userId: number) {
-        let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);        
+        let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
         if (userFiles) {
             let userFile = userFiles.find(userFile => userFile.usedId === userId);
-            if (userFile) {                
+            if (userFile) {
                 return this.ok(userFile);
             }
+        }
+        return this.error('Files not found')
+    }
+
+    deleteFiles(userId: number, fileName: string) {
+        let usersFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
+        let index = usersFiles.findIndex(usersFile => usersFile.usedId === userId);
+        if (usersFiles[index].files) {
+            usersFiles[index].files = usersFiles[index].files.filter(file => file.fileName !== fileName)
+            if(!usersFiles[index].files.length){
+                usersFiles = usersFiles.filter(userFile => userFile.usedId !== userId);                
+            }
+            localStorage.setItem('userFile', JSON.stringify(usersFiles));
+            return this.ok(usersFiles[index]);
         }
         return this.error('Files not found')
     }

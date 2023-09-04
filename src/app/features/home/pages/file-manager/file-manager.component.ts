@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { map } from 'rxjs';
+import { tap } from 'rxjs';
 import { Files } from 'src/app/features/auth/models/files';
 import { UserFiles } from 'src/app/features/auth/models/user-files';
 import { FileManagerService } from 'src/app/features/auth/services/file-manager.service';
@@ -15,13 +15,18 @@ export class FileManagerComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   files: any[] = [];
-  files$ = this.fileManagerService.getFiles();
+  userFiles!: UserFiles;
+  files$ = this.fileManagerService.getFiles().pipe(
+    tap(files => {
+      this.userFiles = files;
+    })
+  );
 
   displayedColumns: string[] = ['fileName', 'fileType', 'action'];
 
   constructor(
     private fileManagerService: FileManagerService
-  ) { 
+  ) {
     this.fileManagerService.loadFiles();
   }
 
@@ -34,6 +39,9 @@ export class FileManagerComponent implements OnInit {
   onFileDropped(files: any) {
     for (const file of files) {
       let type = file.type;
+      if (this.userFiles.files.find(f => f.fileName === file.name)) {
+        return;
+      }
       if (type.includes('pdf') || type.includes('png') || type.includes('jpg')) {
         this.prepareFilesList(file);
       }
@@ -45,6 +53,9 @@ export class FileManagerComponent implements OnInit {
    */
   fileBrowseHandler(files: any) {
     for (const file of files.target.files) {
+      if (this.userFiles.files.find(f => f.fileName === file.name)) {
+        return;
+      }
       this.prepareFilesList(file);
     }
   }
@@ -108,7 +119,6 @@ export class FileManagerComponent implements OnInit {
 
   upload() {
     let byte = '';
-    let userFiles: UserFiles = {} as UserFiles;
     const files: Files[] = [];
 
     this.files.forEach((file, index) => {
@@ -126,7 +136,7 @@ export class FileManagerComponent implements OnInit {
         };
         files.push(f);
 
-        if(this.files.length-1 === index){
+        if (this.files.length - 1 === index) {
           this.fileManagerService.saveFiles(files);
           this.files = [];
         }
@@ -135,4 +145,7 @@ export class FileManagerComponent implements OnInit {
     });
   }
 
+  delete(fileName: string){
+    this.fileManagerService.deleteFile(fileName);
+  }
 }
