@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
+import { map } from 'rxjs';
 import { Files } from 'src/app/features/auth/models/files';
 import { UserFiles } from 'src/app/features/auth/models/user-files';
 import { FileManagerService } from 'src/app/features/auth/services/file-manager.service';

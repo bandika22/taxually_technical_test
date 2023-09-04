@@ -15,7 +15,7 @@ export class FileManagerEffects {
     private apiSeervice: ApiService
   ) { }
 
-  signup$ = createEffect(() =>
+  saveFiles$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FileManagerTypes.saveFiles),
       switchMap((action) => {
@@ -25,14 +25,18 @@ export class FileManagerEffects {
     )
   );
 
-   getFiles$ = createEffect(() =>
+  getFiles$ = createEffect(() =>
     this.actions$.pipe(
       ofType(FileManagerTypes.loadUserFiles),
-      switchMap((action, state) => {
-        const files = this.apiSeervice.getFiles();
-        return of(FileManagerTypes.loadUserFilesSuccess({ files }));
+      switchMap((action) => {
+        return this.apiSeervice.getFiles(action.userId)
+          .pipe(
+
+            map( response => FileManagerTypes.loadUserFilesSuccess({files: response.body})),
+            catchError((error) => of(FileManagerTypes.loadUserFilesError({ error: error })))
+          );
       })
     )
-  ); 
+  );
 
 }

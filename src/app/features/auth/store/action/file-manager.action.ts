@@ -7,6 +7,7 @@ export enum FileManagerActionTypes {
     SAVE_FILES_ERROR = '[FileManager] Save Files Error',
     LOAD_USER_FILES = '[FileManager] Load User Files',
     LOAD_USER_FILES_SUCCESS = '[FileManager] Load User Files Success',
+    LOAD_USER_FILES_ERROR = '[FileManager] Load User Files Success',
 }
 
 export const saveFiles = createAction(
@@ -22,9 +23,13 @@ export const saveFilesError= createAction(
 );
 
 export const loadUserFiles = createAction(
-    FileManagerActionTypes.LOAD_USER_FILES
+    FileManagerActionTypes.LOAD_USER_FILES, props<{ userId: number }>()
 );
 
 export const loadUserFilesSuccess = createAction(
     FileManagerActionTypes.LOAD_USER_FILES_SUCCESS, props<{ files: UserFiles }>()
+);
+
+export const loadUserFilesError = createAction(
+    FileManagerActionTypes.LOAD_USER_FILES_SUCCESS, props<{ error: string  }>()
 );

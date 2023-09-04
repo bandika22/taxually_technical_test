@@ -20,19 +20,23 @@ export class FileManagerService {
   ) { }
 
   saveFiles(files: Files[]) {
-    const user: User = JSON.parse(localStorage.getItem('loggedInUser') as string);
     const userFiles: UserFiles = {
-      usedId: user.id,
+      usedId: this.getUserId(),
       files
     }
     this.store.dispatch(FileManagerTypes.saveFiles({ files: userFiles }));
   }
 
   loadFiles() {
-    this.store.dispatch(FileManagerTypes.loadUserFiles());
+    this.store.dispatch(FileManagerTypes.loadUserFiles({userId: this.getUserId()}));
   }
 
   getFiles() {
     return this.store.select(selectFileManagerhState.userFiles);
+  }
+
+  getUserId(){
+    const user: User = JSON.parse(localStorage.getItem('loggedInUser') as string);
+    return user.id;
   }
 }
