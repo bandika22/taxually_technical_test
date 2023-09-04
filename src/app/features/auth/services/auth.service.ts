@@ -3,8 +3,7 @@ import * as AuthActionTypes from '../store/action/auth.action';
 import * as selectAuthState from '../store/selector/auth.selector'
 import { User } from '../models/user';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription, from } from 'rxjs';
-import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { SignUpForm } from '../pages/signup/signup.component';
 
@@ -17,7 +16,6 @@ export class AuthService implements OnDestroy{
 
   constructor(
     private store: Store,
-    private router: Router
     ) { }
 
   signUp(signUpForm: FormGroup<SignUpForm>) {
@@ -26,7 +24,7 @@ export class AuthService implements OnDestroy{
       firstName: signUpForm.controls.firtName.value,
       lastName: signUpForm.controls.lastName.value,
       password: signUpForm.controls.password.value,
-      id: undefined
+      id: 0
     }
 
     this.store.dispatch(AuthActionTypes.signup({ user }));

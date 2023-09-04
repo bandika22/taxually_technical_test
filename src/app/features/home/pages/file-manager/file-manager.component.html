@@ -1,46 +1,44 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="rounded-3" style="background-color: rgba(239, 239, 240, 0.7); height: 95%; width: 95%;">
-        <div class="row mt-3 ms-3 me-3" [formGroup]="fileUpload">
-            <ng-container formArrayName="files">
-                <div class="col-sm-6">
-                    <div class="container" appDnd (fileDropped)="onFileDropped($event)">
-                        <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)"
-                            accept="image/png, image/jpeg, application/pdf" />
-                        <h3>Drag and drop file here</h3>
-                        <h3>or</h3>
-                        <label class="p-2" for="fileDropRef">Browse for file</label>
-                    </div>
+        <div class="row mt-3 ms-3 me-3">
+            <div class="col-sm-6">
+                <div class="container" appDnd (fileDropped)="onFileDropped($event)">
+                    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)"
+                        accept="image/png, image/jpeg, application/pdf" />
+                    <h3>Drag and drop file here</h3>
+                    <h3>or</h3>
+                    <label class="p-2" for="fileDropRef">Browse for file</label>
                 </div>
-                <div class="col-sm-6">
-                    <div class="d-flex justify-content-between align-items-center mb-1 border-secondary border-2"
-                        *ngFor="let file of files; let i = index">
-                        <ng-container [formGroup]="file">
-                            <div class="w-100">
-                                <h4 class="name">{{file?.value?.file?.name}}</h4>
-                                <p class="size">
-                                    {{formatBytes(file?.value?.file?.size, 0)}}
-                                </p>
-                                <div class="progress-cont w-100 rounded-1 position-relative">
-                                    <div class="progress h-100 rounded-1 position-absolute top-0 start-0"
-                                        [style.width]="file?.value?.file?.progress + '%'">
-                                    </div>
-                                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="d-flex justify-content-between align-items-center mb-1 border-secondary border-2"
+                    *ngFor="let file of files; let i = index">
+                    <div class="w-100">
+                        <h4 class="name">
+                            {{ file?.name }}
+                        </h4>
+                        <p class="size">
+                            {{ formatBytes(file?.size, 0) }}
+                        </p>
+                        <div class="progress-cont w-100 rounded-1 position-relative">
+                            <div class="progress h-100 rounded-1 position-absolute top-0 start-0"
+                                [style.width]="file?.progress + '%'">
                             </div>
-
-                        </ng-container>
-                        <div class="icon" (click)="deleteFile(i)">
-                            <mat-icon>delete</mat-icon>
                         </div>
+
+                    </div>
+                    <div class="icon" (click)="deleteFile(i)">
+                        <mat-icon>delete</mat-icon>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="mt-3 col-sm-3">
-                        <button class="border-0 rounded-5 w-100 text-white"
-                            style="background: linear-gradient(to right, pink, blue); height: 30px;"
-                            (click)="upload()">Upload
-                        </button>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="mt-3 col-sm-3">
+                    <button class="border-0 rounded-5 w-100 text-white"
+                        style="background: linear-gradient(to right, pink, blue); height: 30px;"
+                        (click)="upload()">Upload
+                    </button>
                 </div>
-            </ng-container>
+            </div>
         </div>
     </div>

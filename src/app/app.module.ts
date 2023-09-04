@@ -8,7 +8,9 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { authReducer } from './features/auth/store/reducer/auth.reducer';
-import { RegistrationEffects } from './features/auth/store/effect/auth.effect'
+import { AuthEffects } from './features/auth/store/effect/auth.effect';
+import { fileManagerReducer } from './features/auth/store/reducer/file-manager.reducer';
+import { FileManagerEffects } from './features/auth/store/effect/file-manager.effect';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ApiService } from './core/services/api.service';
 
@@ -20,8 +22,11 @@ import { ApiService } from './core/services/api.service';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    StoreModule.forRoot({ auth: authReducer }),
-    EffectsModule.forRoot([RegistrationEffects]),
+    StoreModule.forRoot({ 
+      auth: authReducer,
+      fileManager: fileManagerReducer
+    }),
+    EffectsModule.forRoot([AuthEffects, FileManagerEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: false

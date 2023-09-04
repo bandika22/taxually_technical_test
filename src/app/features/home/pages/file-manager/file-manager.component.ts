@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
+import { Files } from 'src/app/features/auth/models/files';
+import { UserFiles } from 'src/app/features/auth/models/user-files';
+import { FileManagerService } from 'src/app/features/auth/services/file-manager.service';
 
 @Component({
   selector: 'app-file-manager',
@@ -9,26 +12,18 @@ import { FormArray, FormBuilder } from '@angular/forms';
 export class FileManagerComponent {
   files: any[] = [];
 
-  fileUpload = this.fb.group({
-    files: this.fb.array([])
-  });
-
   constructor(
-    private fb: FormBuilder
+    private fileManagerService: FileManagerService
   ) { }
 
   /**
    * on file drop handler
    */
-  onFileDropped($event: any) {    
-    const files: Array<any> = $event;
-
+  onFileDropped(files: any) {
     for (const file of files) {
       let type = file.type;
       if (type.includes('pdf') || type.includes('png') || type.includes('jpg')) {
         this.prepareFilesList(file);
-      } else {
-        console.log('nem jó a formátum');
       }
     };
   }
@@ -50,25 +45,20 @@ export class FileManagerComponent {
     this.files.splice(index, 1);
   }
 
-  get filesFromArray() {
-    return this.fileUpload.controls["files"] as FormArray;
-  }
-
-
   /**
    * Simulate the upload process
    */
   uploadFilesSimulator(index: number) {
     setTimeout(() => {
-      if (index === this.filesFromArray.controls.length) {
+      if (index === this.files.length) {
         return;
       } else {
         const progressInterval = setInterval(() => {
-          if (this.filesFromArray.controls[index].value.file.progress === 100) {
+          if (this.files[index].progress === 100) {
             clearInterval(progressInterval);
             this.uploadFilesSimulator(index + 1);
           } else {
-            this.filesFromArray.controls[index].value.file.progress += 5;
+            this.files[index].progress += 5;
           }
         }, 200);
       }
@@ -85,11 +75,7 @@ export class FileManagerComponent {
   }
 
   addFiles(file: any) {
-    const fileForm = this.fb.group({
-      file
-    });
-    this.files.push(fileForm);
-    this.filesFromArray.push(fileForm);
+    this.files.push(file);
   }
 
   /**
@@ -103,25 +89,37 @@ export class FileManagerComponent {
     }
     const k = 1024;
     const dm = decimals <= 0 ? 0 : decimals || 2;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const sizes = ['Bytes', 'KB', 'MB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
   upload() {
     let byte = '';
-    for (const file of this.filesFromArray.controls) {
+    let userFiles: UserFiles = {} as UserFiles;
+    const files: Files[] = [];
+
+    this.files.forEach((file, index) => {
       //this.uploadInProgress = true;
 
       const reader = new FileReader();
 
-      reader.readAsDataURL(file.value.file);
+      reader.readAsDataURL(file);
       reader.onload = () => {
-        if (file.value.file.type === 'application/pdf' || file.value.file.type === 'image/jpeg' || file.value.file.type === 'image/png' || file.value.file.type === 'image/jpg') {
-          byte = (<string>reader.result).split(',')[1];
+        byte = (<string>reader.result).split(',')[1];
+        const f: Files = {
+          byteArray: byte,
+          fileName: file.name,
+          fileType: file.type
+        };
+        files.push(f);
+
+        if(this.files.length-1 === index){
+          this.fileManagerService.saveFiles(files);
         }
+
       };
-    }
+    });
   }
 
 }

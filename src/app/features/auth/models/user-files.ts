@@ -1,6 +1,6 @@
+import { Files } from "./files";
+
 export interface UserFiles {
     usedId: number;
-    fileName: string;
-    fileType: string;
-    byteArray: string;
+    files: Files[];
 }

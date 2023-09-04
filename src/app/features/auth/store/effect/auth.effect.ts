@@ -3,12 +3,11 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as AuthActionTypes from '../action/auth.action';
-import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/app/core/services/api.service';
 
 @Injectable()
-export class RegistrationEffects {
+export class AuthEffects {
 
   constructor(
     private router: Router,
