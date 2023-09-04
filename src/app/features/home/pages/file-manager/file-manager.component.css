@@ -4,13 +4,6 @@
     border: dashed 1px #979797;
 }
 
-input {
-    opacity: 0;
-    position: absolute;
-    z-index: 2;
-    top: 0;
-}
-
 label {
     color: white;
     width: 183px;

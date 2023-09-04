@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FileManagerComponent } from './features/home/pages/file-manager/file-manager.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './core/guards/auth.gurd';
 
 const routes: Routes = [
   { path: '', component: FileManagerComponent, canActivate: [AuthGuard]},

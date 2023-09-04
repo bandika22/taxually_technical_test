@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { tap } from 'rxjs';
 import { Files } from 'src/app/features/auth/models/files';
 import { UserFiles } from 'src/app/features/auth/models/user-files';
@@ -14,11 +16,18 @@ export class FileManagerComponent implements OnInit {
 
   @ViewChild(MatSort) sort!: MatSort;
 
+  filterControl: FormControl<string> = new FormControl();
+
   files: any[] = [];
   userFiles!: UserFiles;
+  dataSource!: MatTableDataSource<Files>;
+
   files$ = this.fileManagerService.getFiles().pipe(
-    tap(files => {
-      this.userFiles = files;
+    tap(userFiles => {
+      if(userFiles){
+        this.userFiles = userFiles;
+        this.dataSource = new MatTableDataSource<Files>(userFiles.files);
+      }
     })
   );
 
@@ -26,11 +35,10 @@ export class FileManagerComponent implements OnInit {
 
   constructor(
     private fileManagerService: FileManagerService
-  ) {
-    this.fileManagerService.loadFiles();
-  }
+  ) { }
 
   ngOnInit(): void {
+    this.fileManagerService.loadFiles();
   }
 
   onFileDropped(files: any) {
@@ -61,5 +69,16 @@ export class FileManagerComponent implements OnInit {
 
   delete(fileName: string) {
     this.fileManagerService.deleteFile(fileName);
+  }
+
+  applyFilter(value: string) {
+    value = value.trim().toLowerCase();   
+    this.dataSource.filter = value;
+    
+    this.dataSource.filterPredicate = (data, filter) => {      
+      const value = data.fileName.toLowerCase();
+      return value.includes(filter);
+    };
+
   }
 }

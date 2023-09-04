@@ -1,6 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
 import * as FileManagerTypes from '../action/file-manager.action';
-import { User } from '../../models/user';
 import { UserFiles } from '../../models/user-files';
 
 export interface FileManagerState {
