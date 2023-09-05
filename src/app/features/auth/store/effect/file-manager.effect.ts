@@ -21,9 +21,14 @@ export class FileManagerEffects {
     this.actions$.pipe(
       ofType(FileManagerTypes.saveFiles),
       switchMap((action) => {
-        this.apiService.saveFiles(action.files);
-        this.fileManagerService.loadFiles();
-        return of(FileManagerTypes.saveFilesSuccess());
+        return this.apiService.saveFiles(action.files)
+          .pipe(
+            map(response => FileManagerTypes.saveFilesSuccess()),
+            tap(() => {
+              this.fileManagerService.loadFiles();
+            }),
+            catchError((error) => of(FileManagerTypes.saveFilesError({ error: error })))
+          );
       })
     )
   );
@@ -34,7 +39,7 @@ export class FileManagerEffects {
       switchMap((action) => {
         return this.apiService.getFiles(action.userId)
           .pipe(
-            map( response => FileManagerTypes.loadUserFilesSuccess({files: response.body})),
+            map(response => FileManagerTypes.loadUserFilesSuccess({ files: response.body })),
             catchError((error) => of(FileManagerTypes.loadUserFilesError({ error: error })))
           );
       })
@@ -42,17 +47,17 @@ export class FileManagerEffects {
   );
 
   deleteFiles$ = createEffect(() =>
-  this.actions$.pipe(
-    ofType(FileManagerTypes.deleteFile),
-    switchMap((action) => {
-      return this.apiService.deleteFiles(action.userId, action.fileName)
-      .pipe(
-        tap( () => this.fileManagerService.loadFiles()),
-        map( () => FileManagerTypes.deleteFileSuccess()),
-        catchError((error) => of(FileManagerTypes.deleteFileError({ error: error })))
-      );
-    })
-  )
-);
+    this.actions$.pipe(
+      ofType(FileManagerTypes.deleteFile),
+      switchMap((action) => {
+        return this.apiService.deleteFiles(action.userId, action.fileName)
+          .pipe(
+            tap(() => this.fileManagerService.loadFiles()),
+            map(response => FileManagerTypes.deleteFileSuccess()),
+            catchError((error) => of(FileManagerTypes.deleteFileError({ error: error })))
+          );
+      })
+    )
+  );
 
 }

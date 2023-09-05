@@ -12,7 +12,7 @@ export class ApiService {
     getUsers() {
         const users: User[] = JSON.parse(localStorage.getItem('users') as string);
 
-        if(users.length){
+        if (users.length) {
             return this.ok(users);
         }
 
@@ -38,14 +38,14 @@ export class ApiService {
 
     loginUser(email: string, password: string) {
         const users: User[] = JSON.parse(localStorage.getItem('users') as string);
-        
-        if(!users.length){
+
+        if (!users.length) {
             return this.error('No user saved!');
         }
-        
+
         const user: User | undefined = users.find(user => user.email === email && user.password === password);
 
-        if (user) {            
+        if (user) {
             return this.ok(user);
         } else {
             return this.error('Wrong email or password');
@@ -54,16 +54,15 @@ export class ApiService {
 
     saveFiles(files: UserFiles) {
         let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
-        if (userFiles.length) {
+        if (userFiles && userFiles.length) {
             let index: number = userFiles.findIndex(file => file.usedId === files.usedId);
-            if (userFiles[index]) {
-                userFiles[index].files = userFiles[index].files.concat(files.files);
-            }
+            userFiles[index].files = userFiles[index].files.concat(files.files);
+
         } else {
             userFiles = [files];
         }
         localStorage.setItem('userFile', JSON.stringify(userFiles));
-        return this.ok(userFiles);
+        return this.ok(userFiles, 'File has been successfully saved');
     }
 
     getFiles(userId: number) {
@@ -82,22 +81,22 @@ export class ApiService {
         let index = usersFiles.findIndex(usersFile => usersFile.usedId === userId);
         if (usersFiles[index].files) {
             usersFiles[index].files = usersFiles[index].files.filter(file => file.fileName !== fileName)
-            if(!usersFiles[index].files.length){
-                usersFiles = usersFiles.filter(userFile => userFile.usedId !== userId);                
+            if (!usersFiles[index].files.length) {
+                usersFiles = usersFiles.filter(userFile => userFile.usedId !== userId);
             }
             localStorage.setItem('userFile', JSON.stringify(usersFiles));
-            return this.ok(usersFiles[index]);
+            return this.ok(usersFiles[index], 'File has been successfully deleted');
         }
         return this.error('Files not found')
     }
 
-    ok(body?: any) {
-        return of(new HttpResponse({ status: 200, body }))
+    ok(body?: any, message?: string) {
+        return of(new HttpResponse({ status: 200, body, statusText: message }))
             .pipe(delay(500));
     }
 
     error(message: string) {
-        return throwError(() => (  message  ))
+        return throwError(() => (message))
             .pipe(materialize(), delay(500), dematerialize());
     }
 
