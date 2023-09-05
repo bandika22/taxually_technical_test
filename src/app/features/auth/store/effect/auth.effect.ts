@@ -51,7 +51,7 @@ export class AuthEffects {
             map(response => AuthActionTypes.loginSuccess({ loggedInUser: response.body })),
             tap( user => {
               this.router.navigate(['home']);
-              localStorage.setItem('loggedInUser', JSON.stringify(user));
+              localStorage.setItem('loggedInUser', JSON.stringify(user.loggedInUser));
             }),
             catchError((error) => of(AuthActionTypes.loginError({ error })))
           );
