@@ -40,4 +40,7 @@ export class SignupComponent {
     }
   }
 
+  getErrorMessage(formControl: FormControl) {
+    return this.authService.getErrorMessage(formControl);
+  }
 }

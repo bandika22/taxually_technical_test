@@ -15,7 +15,9 @@ export interface LoginForm {
 })
 export class LoginComponent {
 
-  email = new FormControl<string>('', Validators.required);
+  error$ = this.authService.getError();
+
+  email = new FormControl<string>('', [Validators.required, Validators.email]);
   password = new FormControl<string>('', Validators.required);
 
   loginForm: FormGroup<LoginForm> = new FormGroup<LoginForm>({
@@ -33,6 +35,10 @@ export class LoginComponent {
     if(loginForm.valid){      
       this.authService.login(loginForm.controls.email.value, loginForm.controls.password.value);
     }
+  }
+
+  getErrorMessage(formControl: FormControl) {
+    return this.authService.getErrorMessage(formControl);
   }
 
 }

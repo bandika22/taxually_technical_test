@@ -48,7 +48,7 @@ export class ApiService {
         if (user) {            
             return this.ok(user);
         } else {
-            return this.error('Wrong email or passwprd');
+            return this.error('Wrong email or password');
         }
     }
 

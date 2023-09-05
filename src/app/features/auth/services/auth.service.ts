@@ -4,7 +4,7 @@ import * as selectAuthState from '../store/selector/auth.selector'
 import { User } from '../models/user';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { SignUpForm } from '../pages/signup/signup.component';
 
 @Injectable({
@@ -43,8 +43,18 @@ export class AuthService implements OnDestroy{
     this.allUserSubscription = this.store.select(selectAuthState.users).subscribe(
       u => users = u
     );
-
     return users;
+  }
+
+  getError(){
+    return this.store.select(selectAuthState.error);
+  }
+
+  getErrorMessage(email: FormControl<string>) {
+    if (email.hasError('required')) {
+      return 'You must enter a value';
+    }    
+    return email.hasError('email') ? 'Not a valid email' : '';
   }
 
   ngOnDestroy(): void {
@@ -52,5 +62,4 @@ export class AuthService implements OnDestroy{
       this.allUserSubscription.unsubscribe();
     }
   }
-
 }
