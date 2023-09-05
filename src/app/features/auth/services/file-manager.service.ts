@@ -4,10 +4,9 @@ import { Store } from '@ngrx/store';
 
 import * as FileManagerTypes from '../store/action/file-manager.action';
 import * as selectFileManagerhState from '../store/selector/file-manager.selector'
-import { Subscription, map } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Files } from '../models/files';
 import { User } from '../models/user';
-import { MatTableDataSource } from '@angular/material/table';
 
 @Injectable({
   providedIn: 'root'

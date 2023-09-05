@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,7 +10,8 @@ import { FileManagerService } from 'src/app/features/auth/services/file-manager.
 @Component({
   selector: 'app-file-manager',
   templateUrl: './file-manager.component.html',
-  styleUrls: ['./file-manager.component.css']
+  styleUrls: ['./file-manager.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileManagerComponent implements OnInit {
 

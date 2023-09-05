@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { map, tap } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export interface LoginForm {
@@ -11,7 +10,8 @@ export interface LoginForm {
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent {
 

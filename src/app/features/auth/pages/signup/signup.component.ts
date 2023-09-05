@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { User } from '../../models/user';
 
 export interface SignUpForm {
   firtName: FormControl<string>;
@@ -12,7 +11,8 @@ export interface SignUpForm {
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css']
+  styleUrls: ['./signup.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent {
 
