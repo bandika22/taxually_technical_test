@@ -1,6 +1,6 @@
 import { HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, delay, dematerialize, from, materialize, of, throwError } from "rxjs";
+import { Observable, delay, dematerialize, from, materialize, of, tap, throwError } from "rxjs";
 import { User } from "src/app/features/auth/models/user";
 import { UserFiles } from "src/app/features/auth/models/user-files";
 
@@ -10,16 +10,21 @@ import { UserFiles } from "src/app/features/auth/models/user-files";
 export class ApiService {
 
     getUsers() {
-        return JSON.parse(localStorage.getItem('users') as string);;
+        const users: User[] = JSON.parse(localStorage.getItem('users') as string);
+
+        if(users.length){
+            return this.ok(users);
+        }
+
+        return this.error('No registed user!');
     }
 
     signupUser(user: User) {
-        const myObservable: Observable<User> = from([user]);
         let users: User[] = JSON.parse(localStorage.getItem('users') as string);
 
         if (users) {
             if (users.find(u => u.email === user.email)) {
-                return from([user]);
+                return this.error('An account is already registered with your email address. Please log in.');
             }
             const lastUserIndex: number = users[users.length - 1].id;
             user = { ...user, id: lastUserIndex + 1 };
@@ -28,31 +33,37 @@ export class ApiService {
         users.push(user);
         localStorage.setItem('users', JSON.stringify(users));
 
-        return myObservable;
+        return this.ok(user);
     }
 
-    loginUser(email: string, password: string): User | null {
-        const users: User[] = this.getUsers();
+    loginUser(email: string, password: string) {
+        const users: User[] = JSON.parse(localStorage.getItem('users') as string);
+        
+        if(!users.length){
+            return this.error('No user saved!');
+        }
+        
         const user: User | undefined = users.find(user => user.email === email && user.password === password);
 
-        if (user) {
-            return user;
+        if (user) {            
+            return this.ok(user);
         } else {
-            return null;
+            return this.error('Wrong email or passwprd');
         }
     }
 
     saveFiles(files: UserFiles) {
         let userFiles: UserFiles[] = JSON.parse(localStorage.getItem('userFile') as string);
         if (userFiles.length) {
-            let userFile: UserFiles | undefined = userFiles.find(file => file.usedId === files.usedId);
-            if (userFile) {
-                userFile.files = userFile.files.concat(files.files);
+            let index: number = userFiles.findIndex(file => file.usedId === files.usedId);
+            if (userFiles[index]) {
+                userFiles[index].files = userFiles[index].files.concat(files.files);
             }
         } else {
             userFiles = [files];
         }
         localStorage.setItem('userFile', JSON.stringify(userFiles));
+        return this.ok(userFiles);
     }
 
     getFiles(userId: number) {
@@ -86,7 +97,7 @@ export class ApiService {
     }
 
     error(message: string) {
-        return throwError(() => ({ error: { message } }))
+        return throwError(() => (  message  ))
             .pipe(materialize(), delay(500), dematerialize());
     }
 

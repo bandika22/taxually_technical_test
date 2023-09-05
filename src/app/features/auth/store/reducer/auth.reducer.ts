@@ -40,5 +40,6 @@ export const authReducer = createReducer(
   on(AuthActionTypes.loginError, (state, action) => ({
     ...state,
     loggedIn: false,
+    error: action.error
   })),
 );

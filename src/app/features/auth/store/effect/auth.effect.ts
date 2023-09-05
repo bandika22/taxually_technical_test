@@ -33,8 +33,11 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActionTypes.loadUsers),
       switchMap((action, state) => {
-        const users = this.apiSeervice.getUsers();
-        return of(AuthActionTypes.loadUsersSuccess({ users }));
+        return this.apiSeervice.getUsers()
+        .pipe(
+          map(response => AuthActionTypes.loadUsersSuccess({ users: response.body })),
+          catchError((error) => of(AuthActionTypes.loginError({ error })))
+        );
       })
     )
   );
@@ -43,13 +46,15 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(AuthActionTypes.login),
       switchMap((action, state) => {
-        const user = this.apiSeervice.loginUser(action.email, action.password);
-        if (user) {
-          this.router.navigate(['home']);
-          localStorage.setItem('loggedInUser', JSON.stringify(user));
-          return of(AuthActionTypes.loginSuccess({ loggedInUser: user }));
-        }
-        return of(AuthActionTypes.loginError({ error: 'Wrong email or password!' }));
+        return this.apiSeervice.loginUser(action.email, action.password)
+          .pipe(
+            map(response => AuthActionTypes.loginSuccess({ loggedInUser: response.body })),
+            tap( user => {
+              this.router.navigate(['home']);
+              localStorage.setItem('loggedInUser', JSON.stringify(user));
+            }),
+            catchError((error) => of(AuthActionTypes.loginError({ error })))
+          );
       })
     )
   );
